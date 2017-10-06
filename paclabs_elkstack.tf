@@ -28,8 +28,6 @@ resource "vsphere_virtual_machine" "elkstack" {
 
   network_interface {
     label = "VM Network"
-    ipv4_prefix_length = "24"
-    ipv4_gateway = "10.4.44.1"
   }
 
   disk {
