@@ -27,11 +27,11 @@ resource "vsphere_virtual_machine" "elkstack" {
   memory = 4096
 
   network_interface {
-    label = "VM Network"
+    label = "VM_6.0_DPortGroup"
   }
 
   disk {
-    datastore = "datastore1"
+    datastore = "prod_ds"
     template = "UbuntuTmpl"
     type = "thin"
   }
@@ -56,6 +56,16 @@ resource "vsphere_virtual_machine" "elkstack" {
       password = "Password#1"
     }
 }
+  provisioner "file" {
+    source = "elasticsearch.yml"
+    destination = "/tmp/elasticsearch.yml"
+
+    connection {
+      type = "ssh"
+      user = "ubuntu"
+      password = "Password#1"
+    }
+}
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/script.sh",
@@ -69,4 +79,8 @@ resource "vsphere_virtual_machine" "elkstack" {
     }
   }
 }
+  output "manager_public_ip" {
+    value = "${vsphere_virtual_machine.elkstack.network_interface.0.ipv4_address}"
+  }
+
 
